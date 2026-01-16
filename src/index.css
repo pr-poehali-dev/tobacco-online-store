@@ -64,4 +64,13 @@
   .text-gradient {
     @apply bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent;
   }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

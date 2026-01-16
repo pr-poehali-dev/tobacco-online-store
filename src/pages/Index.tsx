@@ -416,14 +416,15 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product, index) => (
-              <Card 
-                key={product.id} 
-                className="overflow-hidden group hover:shadow-2xl transition-all duration-300 animate-scale-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+          {/* Products Carousel */}
+          <div className="relative">
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              {filteredProducts.map((product, index) => (
+                <Card 
+                  key={product.id} 
+                  className="flex-shrink-0 w-[340px] overflow-hidden group hover:shadow-2xl transition-all duration-300 animate-scale-in snap-start"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
                 <div className="relative overflow-hidden">
                   <img 
                     src={product.image} 
@@ -451,7 +452,8 @@ const Index = () => {
                   </div>
                 </div>
               </Card>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
