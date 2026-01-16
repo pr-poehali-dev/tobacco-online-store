@@ -4,6 +4,10 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 
 interface Product {
@@ -23,6 +27,15 @@ interface CartItem extends Product {
 const Index = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [orderData, setOrderData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    comment: ''
+  });
+  const { toast } = useToast();
 
   const products: Product[] = [
     {
@@ -201,15 +214,136 @@ const Index = () => {
                       
                       <Separator className="my-6" />
                       
-                      <div className="space-y-4">
-                        <div className="flex justify-between text-lg font-semibold">
-                          <span>Итого:</span>
-                          <span className="text-accent">{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                      {!showCheckout ? (
+                        <div className="space-y-4">
+                          <div className="flex justify-between text-lg font-semibold">
+                            <span>Итого:</span>
+                            <span className="text-accent">{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                          </div>
+                          <Button className="w-full" size="lg" onClick={() => setShowCheckout(true)}>
+                            Оформить заказ
+                          </Button>
                         </div>
-                        <Button className="w-full" size="lg">
-                          Оформить заказ
-                        </Button>
-                      </div>
+                      ) : (
+                        <div className="space-y-4 animate-fade-in">
+                          <Button 
+                            variant="ghost" 
+                            className="w-full justify-start" 
+                            onClick={() => setShowCheckout(false)}
+                          >
+                            <Icon name="ArrowLeft" size={18} className="mr-2" />
+                            Вернуться к корзине
+                          </Button>
+                          
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="name" className="text-foreground">Имя *</Label>
+                              <Input 
+                                id="name" 
+                                placeholder="Введите ваше имя"
+                                value={orderData.name}
+                                onChange={(e) => setOrderData({...orderData, name: e.target.value})}
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="phone" className="text-foreground">Телефон *</Label>
+                              <Input 
+                                id="phone" 
+                                type="tel"
+                                placeholder="+7 (___) ___-__-__"
+                                value={orderData.phone}
+                                onChange={(e) => setOrderData({...orderData, phone: e.target.value})}
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="email" className="text-foreground">Email *</Label>
+                              <Input 
+                                id="email" 
+                                type="email"
+                                placeholder="example@email.com"
+                                value={orderData.email}
+                                onChange={(e) => setOrderData({...orderData, email: e.target.value})}
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="address" className="text-foreground">Адрес доставки *</Label>
+                              <Textarea 
+                                id="address" 
+                                placeholder="Город, улица, дом, квартира"
+                                value={orderData.address}
+                                onChange={(e) => setOrderData({...orderData, address: e.target.value})}
+                                className="mt-1 min-h-20"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="comment" className="text-foreground">Комментарий к заказу</Label>
+                              <Textarea 
+                                id="comment" 
+                                placeholder="Дополнительная информация"
+                                value={orderData.comment}
+                                onChange={(e) => setOrderData({...orderData, comment: e.target.value})}
+                                className="mt-1 min-h-20"
+                              />
+                            </div>
+                          </div>
+                          
+                          <Separator />
+                          
+                          <div className="space-y-4">
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Товары ({cart.length}):</span>
+                                <span>{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Доставка:</span>
+                                <span className="text-accent">Бесплатно</span>
+                              </div>
+                            </div>
+                            
+                            <Separator />
+                            
+                            <div className="flex justify-between text-lg font-semibold">
+                              <span>Итого:</span>
+                              <span className="text-accent">{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                            </div>
+                            
+                            <Button 
+                              className="w-full" 
+                              size="lg"
+                              onClick={() => {
+                                if (!orderData.name || !orderData.phone || !orderData.email || !orderData.address) {
+                                  toast({
+                                    title: "Заполните обязательные поля",
+                                    description: "Пожалуйста, укажите имя, телефон, email и адрес доставки",
+                                    variant: "destructive"
+                                  });
+                                  return;
+                                }
+                                
+                                toast({
+                                  title: "Заказ оформлен!",
+                                  description: "Мы свяжемся с вами в ближайшее время для подтверждения",
+                                });
+                                
+                                setCart([]);
+                                setShowCheckout(false);
+                                setOrderData({ name: '', phone: '', email: '', address: '', comment: '' });
+                              }}
+                            >
+                              <Icon name="Check" size={20} className="mr-2" />
+                              Подтвердить заказ
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
