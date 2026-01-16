@@ -28,6 +28,7 @@ interface CartItem extends Product {
 const Index = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [selectedBrand, setSelectedBrand] = useState('Все бренды');
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
   const [orderData, setOrderData] = useState({
     phone: '',
@@ -160,10 +161,26 @@ const Index = () => {
   ];
 
   const categories = ['Все', 'Никотиновые подушки', 'Жевательный табак', 'Никотиновые пластинки'];
+  
+  const allBrands = ['Все бренды', ...Array.from(new Set(products.map(p => p.brand)))];
 
-  const filteredProducts = selectedCategory === 'Все' 
-    ? products 
-    : products.filter(p => p.category === selectedCategory);
+  const filteredProducts = products.filter(p => {
+    const categoryMatch = selectedCategory === 'Все' || p.category === selectedCategory;
+    const brandMatch = selectedBrand === 'Все бренды' || p.brand === selectedBrand;
+    return categoryMatch && brandMatch;
+  });
+
+  const calculateDiscount = (quantity: number) => {
+    if (quantity >= 10) return 0.15;
+    if (quantity >= 5) return 0.10;
+    if (quantity >= 3) return 0.05;
+    return 0;
+  };
+
+  const getDiscountedPrice = (price: number, quantity: number) => {
+    const discount = calculateDiscount(quantity);
+    return price * (1 - discount);
+  };
 
   const getProductQuantity = (productId: number) => {
     return productQuantities[productId] || 1;
@@ -211,8 +228,17 @@ const Index = () => {
     }
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  
+  const totalPrice = cart.reduce((sum, item) => {
+    const discountedPrice = getDiscountedPrice(item.price, item.quantity);
+    return sum + (discountedPrice * item.quantity);
+  }, 0);
+  
+  const totalDiscount = cart.reduce((sum, item) => {
+    const discount = calculateDiscount(item.quantity);
+    return sum + (item.price * item.quantity * discount);
+  }, 0);
 
   const handleCheckout = () => {
     if (!orderData.phone || !orderData.telegram || !orderData.address) {
@@ -270,48 +296,61 @@ const Index = () => {
                     <p className="text-muted-foreground text-center py-8">Корзина пуста</p>
                   ) : (
                     <>
-                      {cart.map(item => (
-                        <Card key={item.id} className="p-4">
-                          <div className="flex gap-4">
-                            <img 
-                              src={item.image} 
-                              alt={item.name}
-                              className="w-20 h-20 object-cover rounded"
-                            />
-                            <div className="flex-1">
-                              <h4 className="font-semibold">{item.brand} {item.name}</h4>
-                              <p className="text-sm text-muted-foreground">{item.price.toLocaleString('ru-RU')} ₽</p>
-                              <div className="flex items-center gap-2 mt-2">
-                                <Button 
-                                  size="icon" 
-                                  variant="outline" 
-                                  className="h-7 w-7"
-                                  onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                                >
-                                  <Icon name="Minus" size={14} />
-                                </Button>
-                                <span className="text-sm w-8 text-center">{item.quantity}</span>
-                                <Button 
-                                  size="icon" 
-                                  variant="outline" 
-                                  className="h-7 w-7"
-                                  onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                                >
-                                  <Icon name="Plus" size={14} />
-                                </Button>
-                                <Button 
-                                  size="icon" 
-                                  variant="ghost" 
-                                  className="h-7 w-7 ml-auto"
-                                  onClick={() => removeFromCart(item.id)}
-                                >
-                                  <Icon name="Trash2" size={14} />
-                                </Button>
+                      {cart.map(item => {
+                        const itemDiscount = calculateDiscount(item.quantity);
+                        const discountedPrice = getDiscountedPrice(item.price, item.quantity);
+                        return (
+                          <Card key={item.id} className="p-4">
+                            <div className="flex gap-4">
+                              <img 
+                                src={item.image} 
+                                alt={item.name}
+                                className="w-20 h-20 object-cover rounded"
+                              />
+                              <div className="flex-1">
+                                <h4 className="font-semibold">{item.brand} {item.name}</h4>
+                                <div className="flex items-center gap-2">
+                                  <p className="text-sm text-muted-foreground">
+                                    {discountedPrice.toLocaleString('ru-RU')} ₽
+                                  </p>
+                                  {itemDiscount > 0 && (
+                                    <Badge variant="default" className="bg-green-600 text-xs">
+                                      -{(itemDiscount * 100).toFixed(0)}%
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="outline" 
+                                    className="h-7 w-7"
+                                    onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                                  >
+                                    <Icon name="Minus" size={14} />
+                                  </Button>
+                                  <span className="text-sm w-8 text-center">{item.quantity}</span>
+                                  <Button 
+                                    size="icon" 
+                                    variant="outline" 
+                                    className="h-7 w-7"
+                                    onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                                  >
+                                    <Icon name="Plus" size={14} />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-7 w-7 ml-auto"
+                                    onClick={() => removeFromCart(item.id)}
+                                  >
+                                    <Icon name="Trash2" size={14} />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </Card>
-                      ))}
+                          </Card>
+                        );
+                      })}
                       
                       <Separator className="my-6" />
                       
@@ -353,9 +392,20 @@ const Index = () => {
                       
                       <Separator />
                       
-                      <div className="flex justify-between text-lg font-semibold">
-                        <span>Итого:</span>
-                        <span className="text-accent">{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                      <div className="space-y-2 bg-accent/5 p-4 rounded-lg">
+                        <div className="text-sm text-muted-foreground text-center mb-2">
+                          💰 Скидки: 3+ шт. = -5% | 5+ шт. = -10% | 10+ шт. = -15%
+                        </div>
+                        {totalDiscount > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Скидка:</span>
+                            <span className="text-green-600 font-semibold">-{totalDiscount.toLocaleString('ru-RU')} ₽</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between text-lg font-semibold">
+                          <span>Итого:</span>
+                          <span className="text-accent">{totalPrice.toLocaleString('ru-RU')} ₽</span>
+                        </div>
                       </div>
                       
                       <Button className="w-full" size="lg" onClick={handleCheckout}>
@@ -391,17 +441,37 @@ const Index = () => {
 
       <section id="catalog" className="py-16 bg-card/30">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap gap-3 justify-center mb-12">
-            {categories.map(cat => (
-              <Button
-                key={cat}
-                variant={selectedCategory === cat ? "default" : "outline"}
-                onClick={() => setSelectedCategory(cat)}
-                className="hover-scale"
-              >
-                {cat}
-              </Button>
-            ))}
+          <div className="mb-8">
+            <h3 className="text-center text-lg font-semibold mb-3 text-muted-foreground">Категории</h3>
+            <div className="flex flex-wrap gap-3 justify-center mb-6">
+              {categories.map(cat => (
+                <Button
+                  key={cat}
+                  variant={selectedCategory === cat ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(cat)}
+                  className="hover-scale"
+                >
+                  {cat}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mb-12">
+            <h3 className="text-center text-lg font-semibold mb-3 text-muted-foreground">Бренды</h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {allBrands.map(brand => (
+                <Button
+                  key={brand}
+                  variant={selectedBrand === brand ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedBrand(brand)}
+                  className="hover-scale"
+                >
+                  {brand}
+                </Button>
+              ))}
+            </div>
           </div>
 
           <div className="relative">
@@ -451,14 +521,31 @@ const Index = () => {
                       </Button>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-accent">
-                        {product.price.toLocaleString('ru-RU')} ₽
-                      </span>
-                      <Button onClick={() => addToCart(product)} className="hover-scale">
-                        <Icon name="ShoppingCart" size={18} className="mr-2" />
-                        В корзину
-                      </Button>
+                    <div className="space-y-2">
+                      {calculateDiscount(getProductQuantity(product.id)) > 0 && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground line-through">
+                            {(product.price * getProductQuantity(product.id)).toLocaleString('ru-RU')} ₽
+                          </span>
+                          <Badge variant="default" className="bg-green-600">
+                            -{(calculateDiscount(getProductQuantity(product.id)) * 100).toFixed(0)}%
+                          </Badge>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-2xl font-bold text-accent">
+                            {(getDiscountedPrice(product.price, getProductQuantity(product.id)) * getProductQuantity(product.id)).toLocaleString('ru-RU')} ₽
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {getDiscountedPrice(product.price, getProductQuantity(product.id)).toLocaleString('ru-RU')} ₽ за шт.
+                          </div>
+                        </div>
+                        <Button onClick={() => addToCart(product)} className="hover-scale">
+                          <Icon name="ShoppingCart" size={18} className="mr-2" />
+                          В корзину
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Card>
