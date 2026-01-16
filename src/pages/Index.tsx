@@ -40,61 +40,88 @@ const Index = () => {
   const products: Product[] = [
     {
       id: 1,
-      name: 'Cuban Robusto Reserve',
-      category: 'Сигары',
-      price: 8500,
-      origin: 'Куба',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/61d37ee3-7e58-48d3-a38f-32bcd2081a3c.jpg',
-      description: 'Премиальная сигара с богатым вкусом и длительным послевкусием'
+      name: 'Nordic Spirit Premium',
+      category: 'Никотиновые подушки',
+      price: 450,
+      origin: 'Швеция',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/493544bb-985b-4c8d-b118-9f8fa38d9998.jpg',
+      description: 'Премиальные никотиновые подушечки с освежающим мятным вкусом'
     },
     {
       id: 2,
-      name: 'Davidoff Churchill',
-      category: 'Сигары',
-      price: 12000,
-      origin: 'Доминикана',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/61d37ee3-7e58-48d3-a38f-32bcd2081a3c.jpg',
-      description: 'Элегантная сигара с утонченным ароматом'
+      name: 'Velo Ice Cool',
+      category: 'Никотиновые подушки',
+      price: 420,
+      origin: 'Дания',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/493544bb-985b-4c8d-b118-9f8fa38d9998.jpg',
+      description: 'Интенсивный холодок и долгое действие'
     },
     {
       id: 3,
-      name: 'Peterson Pipe Collection',
-      category: 'Трубки',
-      price: 15000,
-      origin: 'Ирландия',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/793eb1fd-19d3-47c9-ac31-ed1aec9ecbf0.jpg',
-      description: 'Коллекционная трубка ручной работы'
+      name: 'White Fox Double Mint',
+      category: 'Никотиновые подушки',
+      price: 480,
+      origin: 'Швеция',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/493544bb-985b-4c8d-b118-9f8fa38d9998.jpg',
+      description: 'Двойная мята для истинных ценителей'
     },
     {
       id: 4,
-      name: 'English Mixture Premium',
-      category: 'Табак',
-      price: 3500,
-      origin: 'Англия',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/b5416b2c-12ef-44f9-8d1d-e41ff2013504.jpg',
-      description: 'Классическая английская смесь табака'
+      name: 'Copenhagen Premium Cut',
+      category: 'Жевательный табак',
+      price: 890,
+      origin: 'США',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/e2dae898-25a5-4167-98f8-4f1ee4841071.jpg',
+      description: 'Классический американский жевательный табак премиум качества'
     },
     {
       id: 5,
-      name: 'Virginia Gold Leaf',
-      category: 'Табак',
-      price: 4200,
+      name: 'Grizzly Dark Wintergreen',
+      category: 'Жевательный табак',
+      price: 850,
       origin: 'США',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/b5416b2c-12ef-44f9-8d1d-e41ff2013504.jpg',
-      description: 'Натуральная вирджиния высшего качества'
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/e2dae898-25a5-4167-98f8-4f1ee4841071.jpg',
+      description: 'Насыщенный вкус с нотками зимней свежести'
     },
     {
       id: 6,
-      name: 'Chacom Pipe Elegant',
-      category: 'Трубки',
-      price: 9500,
-      origin: 'Франция',
-      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/793eb1fd-19d3-47c9-ac31-ed1aec9ecbf0.jpg',
-      description: 'Французское качество и стиль'
+      name: 'Skoal Classic',
+      category: 'Жевательный табак',
+      price: 920,
+      origin: 'США',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/e2dae898-25a5-4167-98f8-4f1ee4841071.jpg',
+      description: 'Традиционный рецепт с богатым табачным вкусом'
+    },
+    {
+      id: 7,
+      name: 'NicStrip Mint',
+      category: 'Никотиновые пластинки',
+      price: 350,
+      origin: 'Германия',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/0f71a1e6-7660-4b7b-93df-5323349155a6.jpg',
+      description: 'Инновационные пластинки с мгновенным эффектом'
+    },
+    {
+      id: 8,
+      name: 'FreshStrips Strong',
+      category: 'Никотиновые пластинки',
+      price: 380,
+      origin: 'Швейцария',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/0f71a1e6-7660-4b7b-93df-5323349155a6.jpg',
+      description: 'Усиленная формула для максимального эффекта'
+    },
+    {
+      id: 9,
+      name: 'QuickNic Original',
+      category: 'Никотиновые пластинки',
+      price: 330,
+      origin: 'Нидерланды',
+      image: 'https://cdn.poehali.dev/projects/87b8c9c8-4511-4de7-9fa0-4e5a617fd150/files/0f71a1e6-7660-4b7b-93df-5323349155a6.jpg',
+      description: 'Оригинальный вкус без лишних добавок'
     }
   ];
 
-  const categories = ['Все', 'Сигары', 'Трубки', 'Табак', 'Аксессуары'];
+  const categories = ['Все', 'Никотиновые подушки', 'Жевательный табак', 'Никотиновые пластинки'];
 
   const filteredProducts = selectedCategory === 'Все' 
     ? products 
@@ -359,10 +386,10 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center animate-fade-in">
             <h2 className="text-6xl md:text-7xl font-bold mb-6 text-gradient">
-              Искусство табачной культуры
+              Премиум никотиновые продукты
             </h2>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Эксклюзивная коллекция премиальных сигар, табаков и аксессуаров для истинных ценителей
+              Никотиновые подушки, жевательный табак и пластинки высшего качества
             </p>
             <Button size="lg" className="text-lg px-8 hover-scale">
               <Icon name="Sparkles" size={20} className="mr-2" />
@@ -472,17 +499,17 @@ const Index = () => {
             {[
               {
                 name: 'Александр М.',
-                text: 'Восхитительная коллекция кубинских сигар! Качество обслуживания на высоте.',
+                text: 'Отличные никотиновые подушки! Чистый вкус и быстрый эффект.',
                 rating: 5
               },
               {
                 name: 'Дмитрий К.',
-                text: 'Наконец нашёл место, где можно купить настоящие премиальные трубки. Рекомендую!',
+                text: 'Перешёл на никотиновые пластинки — очень удобно и незаметно!',
                 rating: 5
               },
               {
                 name: 'Сергей В.',
-                text: 'Отличный выбор табаков, быстрая доставка. Буду заказывать ещё.',
+                text: 'Большой выбор жевательного табака. Доставка быстрая!',
                 rating: 5
               }
             ].map((review, idx) => (
@@ -510,17 +537,16 @@ const Index = () => {
                 <h3 className="text-xl font-bold">CartelAntitobacco</h3>
               </div>
               <p className="text-muted-foreground text-sm">
-                Премиальные табачные изделия для ценителей
+                Премиум никотиновые продукты высшего качества
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Каталог</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-accent transition-colors">Сигары</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Трубки</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Табак</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Аксессуары</a></li>
+                <li><a href="#" className="hover:text-accent transition-colors">Никотиновые подушки</a></li>
+                <li><a href="#" className="hover:text-accent transition-colors">Жевательный табак</a></li>
+                <li><a href="#" className="hover:text-accent transition-colors">Никотиновые пластинки</a></li>
               </ul>
             </div>
             
