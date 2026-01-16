@@ -170,6 +170,7 @@ const Index = () => {
             
             <nav className="hidden md:flex items-center gap-8">
               <a href="#catalog" className="text-muted-foreground hover:text-accent transition-colors">Каталог</a>
+              <a href="#brands" className="text-muted-foreground hover:text-accent transition-colors">Бренды</a>
               <a href="#about" className="text-muted-foreground hover:text-accent transition-colors">О нас</a>
               <a href="#reviews" className="text-muted-foreground hover:text-accent transition-colors">Отзывы</a>
               <a href="#contact" className="text-muted-foreground hover:text-accent transition-colors">Контакты</a>
@@ -455,6 +456,43 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Brands Section */}
+      <section id="brands" className="py-24 bg-card/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4">Премиальные бренды</h2>
+            <p className="text-xl text-muted-foreground">Работаем только с проверенными производителями</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {[
+              { name: 'Nordic Spirit', country: 'Швеция' },
+              { name: 'Velo', country: 'Дания' },
+              { name: 'White Fox', country: 'Швеция' },
+              { name: 'Copenhagen', country: 'США' },
+              { name: 'Grizzly', country: 'США' },
+              { name: 'Skoal', country: 'США' },
+              { name: 'NicStrip', country: 'Германия' },
+              { name: 'FreshStrips', country: 'Швейцария' },
+              { name: 'QuickNic', country: 'Нидерланды' },
+              { name: 'Zyn', country: 'Швеция' },
+              { name: 'On!', country: 'США' },
+              { name: 'Lyft', country: 'Швеция' }
+            ].map((brand, idx) => (
+              <Card key={idx} className="p-6 text-center hover-scale cursor-pointer group">
+                <div className="mb-3">
+                  <div className="w-16 h-16 mx-auto bg-accent/10 rounded-full flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <Icon name="Sparkles" size={32} className="text-accent" />
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-1">{brand.name}</h3>
+                <p className="text-xs text-muted-foreground">{brand.country}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Expert Section */}
       <section id="about" className="py-24 luxury-gradient">
         <div className="container mx-auto px-6">
@@ -462,9 +500,8 @@ const Index = () => {
             <Icon name="Award" size={48} className="text-accent mx-auto mb-6" />
             <h2 className="text-5xl font-bold mb-8">Экспертиза и качество</h2>
             <p className="text-xl text-muted-foreground leading-relaxed mb-12">
-              Более 20 лет мы отбираем лучшие табачные изделия со всего мира. 
-              Каждая позиция в нашем каталоге прошла строгий отбор и соответствует 
-              высочайшим стандартам качества.
+              Мы специализируемся на премиальных никотиновых продуктах нового поколения. 
+              Каждая позиция в нашем каталоге — оригинальная продукция от ведущих мировых производителей.
             </p>
             
             <div className="grid md:grid-cols-3 gap-8 mt-16">
