@@ -13,7 +13,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const FUNCTIONS_API = {
   products: 'https://functions.poehali.dev/4a0fff15-2ece-44a9-ac3e-24395f30cecf',
-  categories: 'https://functions.poehali.dev/a7dcbfa3-eba8-419f-aba0-781be745c05f'
+  categories: 'https://functions.poehali.dev/a7dcbfa3-eba8-419f-aba0-781be745c05f',
+  sync: 'https://functions.poehali.dev/97940e34-d561-47af-aa9f-1f36c40570f8'
 };
 
 interface Product {
@@ -59,8 +60,21 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadCategories();
-    loadProducts();
+    const initializeData = async () => {
+      const lastSync = localStorage.getItem('lastSync');
+      const now = Date.now();
+      const oneHour = 60 * 60 * 1000;
+
+      if (!lastSync || now - parseInt(lastSync) > oneHour) {
+        await syncProducts();
+        localStorage.setItem('lastSync', now.toString());
+      }
+      
+      loadCategories();
+      loadProducts();
+    };
+
+    initializeData();
   }, []);
 
   useEffect(() => {
@@ -102,6 +116,21 @@ const Index = () => {
       console.error('Ошибка загрузки товаров:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const syncProducts = async () => {
+    try {
+      const response = await fetch(FUNCTIONS_API.sync, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Ошибка синхронизации');
+      }
+    } catch (error) {
+      console.error('Ошибка синхронизации:', error);
     }
   };
 
