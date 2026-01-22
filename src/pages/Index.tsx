@@ -261,7 +261,6 @@ ${orderData.address}
             </div>
             
             <nav className="hidden md:flex items-center gap-8">
-              <a href="/catalog" className="text-muted-foreground hover:text-accent transition-colors">МойСклад</a>
               <a href="#catalog" className="text-muted-foreground hover:text-accent transition-colors">Каталог</a>
               <a href="#brands" className="text-muted-foreground hover:text-accent transition-colors">Бренды</a>
               <a href="#about" className="text-muted-foreground hover:text-accent transition-colors">О нас</a>
