@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "Получение статуса синхронизации",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "categories": 0,
+        "products": 0
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
