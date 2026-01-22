@@ -74,11 +74,12 @@ def sync_products(token: str, db_url: str, schema: str) -> dict:
         
         conn.commit()
         
-        # Синхронизация товаров
+        # Синхронизация товаров с расширением stock для получения остатков
         products_url = 'https://api.moysklad.ru/api/remap/1.2/entity/product'
         params = {
             'limit': 100,
-            'offset': 0
+            'offset': 0,
+            'expand': 'stock'
         }
         
         products_synced = 0
@@ -107,18 +108,11 @@ def sync_products(token: str, db_url: str, schema: str) -> dict:
                 if sale_prices and len(sale_prices) > 0:
                     price = sale_prices[0].get('value', 0) / 100
                 
-                # Остаток - запрашиваем отдельно через stock API
-                stock = 0
-                stock_url = f'https://api.moysklad.ru/api/remap/1.2/report/stock/bystore?filter=product={prod_id}'
-                try:
-                    stock_response = requests.get(stock_url, headers=headers)
-                    if stock_response.status_code == 200:
-                        stock_data = stock_response.json()
-                        if stock_data.get('rows'):
-                            # Суммируем остатки по всем складам
-                            stock = sum(row.get('stock', 0) for row in stock_data['rows'])
-                except:
-                    # Если не удалось получить остатки, используем значение из товара
+                # Остаток - используем поле stock из expand
+                stock = product.get('stock', 0)
+                
+                # Если stock не пришел через expand, пробуем quantity
+                if stock == 0:
                     stock = product.get('quantity', 0)
                 
                 # Категория
