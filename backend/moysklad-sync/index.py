@@ -108,15 +108,21 @@ def sync_products(token: str, db_url: str, schema: str) -> dict:
                 if sale_prices and len(sale_prices) > 0:
                     price = sale_prices[0].get('value', 0) / 100
                 
-                # Остаток - используем поле stock из expand
-                stock = product.get('stock', 0)
-                
-                # Если stock не пришел через expand, пробуем quantity
-                if stock == 0:
-                    stock = product.get('quantity', 0)
-                
-                # Логируем для отладки
-                print(f"Product: {prod_name}, stock field: {product.get('stock')}, quantity field: {product.get('quantity')}, final stock: {stock}")
+                # Остаток - получаем через отчёт по остаткам
+                stock = 0
+                try:
+                    stock_url = f'https://api.moysklad.ru/api/remap/1.2/report/stock/all?filter=product=https://api.moysklad.ru/api/remap/1.2/entity/product/{prod_id}'
+                    stock_response = requests.get(stock_url, headers=headers)
+                    if stock_response.status_code == 200:
+                        stock_data = stock_response.json()
+                        if stock_data.get('rows'):
+                            # Суммируем остатки по всем складам
+                            for row in stock_data['rows']:
+                                stock += row.get('stock', 0)
+                    print(f"Product: {prod_name}, final stock: {stock}")
+                except Exception as e:
+                    print(f"Error getting stock for {prod_name}: {e}")
+                    stock = 0
                 
                 # Категория
                 category_meta = product.get('productFolder')
