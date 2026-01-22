@@ -115,6 +115,9 @@ def sync_products(token: str, db_url: str, schema: str) -> dict:
                 if stock == 0:
                     stock = product.get('quantity', 0)
                 
+                # Логируем для отладки
+                print(f"Product: {prod_name}, stock field: {product.get('stock')}, quantity field: {product.get('quantity')}, final stock: {stock}")
+                
                 # Категория
                 category_meta = product.get('productFolder')
                 category_id = None
